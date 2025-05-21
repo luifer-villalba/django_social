@@ -21,12 +21,30 @@ class UserCreationForm(forms.ModelForm):
             raise forms.ValidationError("Passwords don't match")
         return password2
     
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if get_user_model().objects.filter(email=email).exists():
+            raise forms.ValidationError("Email already in use")
+        return email
+    
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('first_name', 'last_name', 'email')
+        fields = ['first_name', 'last_name', 'email']
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        qs = get_user_model().objects.exclude(
+            id=self.instance.id
+        ).filter(
+            email=data
+        )
+        if qs.exists():
+            raise forms.ValidationError('Email already in use.')
+        return data
+
 
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('date_of_birth', 'photo')
+        fields = ['date_of_birth', 'photo']

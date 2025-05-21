@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -132,3 +133,9 @@ LOGOUT_URL = 'logout'
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default authentication backend
+    'account.authentication.EmailAuthBackend',  # Custom email authentication backend
+]
